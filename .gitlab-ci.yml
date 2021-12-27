@@ -20,5 +20,16 @@ sonarqube-check:
 build:
   stage: build
   image: docker:latest
+  only:
+    - master
+  script:
+   - docker build .
+
+build_manual:
+  stage: build
+  when: manual
+  except:
+   - master
+  image: docker:latest
   script:
    - docker build .
