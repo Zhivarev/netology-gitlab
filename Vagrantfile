@@ -54,7 +54,7 @@ Vagrant.configure("2") do |config|
   #   vb.gui = true
   #
   #   # Customize the amount of memory on the VM:
-    vb.memory = "8192"
+    vb.memory = "6144"
   end
   #
   # View the documentation for the provider you are using for more
@@ -67,18 +67,27 @@ Vagrant.configure("2") do |config|
     export DEBIAN_FRONTEND=noninteractive
     apt-get update
 
-    # install docker
-    apt-get install -y docker.io
+    # install docker & docker-compose
+    apt-get install -y docker.io docker-compose
 
     # install gitlab: https://about.gitlab.com/install/#ubuntu
     apt-get install -y curl openssh-server ca-certificates tzdata perl
     curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash
     sudo EXTERNAL_URL="http://gitlab.localdomain" apt-get install gitlab-ee
 
-    # pull gitlab runner image in advance
+    # pull some images in advance
     docker pull gitlab/gitlab-runner:latest
+    docker pull sonarsource/sonar-scanner-cli:latest
+    docker pull golang:1.17
+    docker pull docker:latest
 
-    # add some records to 
+    # set sysctl for sonarqube
+    sysctl vm.max_map_count=262144
+
+    # run sonarqube
+    cd /vagrant && docker-compose up -d
+
+    # add some records to /etc/hosts
     echo -e "192.168.56.10\tubuntu-bionic\tubuntu-bionic" >> /etc/hosts
     echo -e "192.168.56.10\tgitlab.localdomain\tgitlab" >> /etc/hosts
   SHELL
