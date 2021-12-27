@@ -54,7 +54,7 @@ Vagrant.configure("2") do |config|
   #   vb.gui = true
   #
   #   # Customize the amount of memory on the VM:
-    vb.memory = "4072"
+    vb.memory = "8192"
   end
   #
   # View the documentation for the provider you are using for more
@@ -66,13 +66,19 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
     export DEBIAN_FRONTEND=noninteractive
     apt-get update
+
     # install docker
     apt-get install -y docker.io
+
     # install gitlab: https://about.gitlab.com/install/#ubuntu
     apt-get install -y curl openssh-server ca-certificates tzdata perl
     curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash
     sudo EXTERNAL_URL="http://gitlab.localdomain" apt-get install gitlab-ee
 
+    # pull gitlab runner image in advance
+    docker pull gitlab/gitlab-runner:latest
+
+    # add some records to 
     echo -e "192.168.56.10\tubuntu-bionic\tubuntu-bionic" >> /etc/hosts
     echo -e "192.168.56.10\tgitlab.localdomain\tgitlab" >> /etc/hosts
   SHELL
