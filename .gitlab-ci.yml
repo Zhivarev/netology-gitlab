@@ -15,7 +15,7 @@ sonarqube-check:
   entrypoint: [""]
  variables:
  script:
-  - sonar-scanner -Dsonar.projectKey=netology-gitlab -Dsonar.sources=. -Dsonar.host.url=http://gitlab.localdomain:9000 -Dsonar.login=a778675a32f0d9d6455a3d502f4e2838e784994d
+  - sonar-scanner -Dsonar.projectKey=netology-gitlab -Dsonar.sources=. -Dsonar.host.url=http://gitlab.localdomain:9000 -Dsonar.login=211d49412b23890c129179585eda84f9cad035c4
 
 build:
   stage: build
