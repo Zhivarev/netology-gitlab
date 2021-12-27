@@ -86,3 +86,43 @@ build:
   script:
    - docker build .
 ```
+
+## Pipeline with manual run
+
+```yaml
+stages:
+  - test
+  - build
+
+test:
+  stage: test
+  image: golang:1.16
+  script: 
+   - go test .
+
+sonarqube-check:
+ stage: test
+ image:
+  name: sonarsource/sonar-scanner-cli
+  entrypoint: [""]
+ variables:
+ script:
+  - sonar-scanner -Dsonar.projectKey=netology-gitlab -Dsonar.sources=. -Dsonar.host.url=http://gitlab.localdomain:9000 -Dsonar.login=a778675a32f0d9d6455a3d502f4e2838e784994d
+
+build:
+  stage: build
+  image: docker:latest
+  only:
+    - master
+  script:
+   - docker build .
+
+build:
+  stage: build
+  image: docker:latest
+  when: manual
+  except:
+    - master
+  script:
+   - docker build .
+```
