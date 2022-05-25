@@ -1,26 +1,61 @@
 # Gitlab
 
-Перед запуском нужно добавить запись в локальный /etc/hosts:
+## Развернуть инсталляцию
+
+0. Установить плагин vagrant-disksize
+
+```bash
+
+```
+
+1. Добавить запись в локальный /etc/hosts:
 
 ```bash
 echo '192.168.56.10    gitlab.localdomain gitlab' >> /etc/hosts
 ```
 
-Initial root password:
+2. Запустить инсталляцию:
 
 ```bash
-cat /etc/gitlab/initial_root_password
+vagrant up
 ```
 
-## Run Gitlab runner
+После успешного завершения Gitlab будет доступен по адресу http://gitlab.localdomain
+
+Получить первичный пароль для пользователя root:
+
+```bash
+vagrant ssh -- sudo cat /etc/gitlab/initial_root_password
+```
+
+### Возможные проблемы
+
+1. В Vagrantfile определено, что виртуальная машина, которая будет поднята — получит адрес 192.168.56.10. Возможна ситуация, когда сетевой интерфейс virtualbox, vboxnet0, использует другую подсеть:
+
+```bash
+$ ip -br -c a sh vboxnet2
+vboxnet2         UP             192.168.100.1/24 fe80::800:27ff:fe00:2/64
+```
+
+В этом случае нужно исправить адрес на тот, что будет соответствовать сети интерфейса и добавить запись для него в /etc/hosts
+
+2. Недостаточно ресурсов. Для разворачивания инстралляции потребуется как минимум 6GB памяти, следует учитывать это при запуске. Если ресурсов недостаточно — можно попробовать подправить Vagrantfile, но работоспособность инсталляции при этом не гарантируется. 
+
+## Gitlab runner
 
 Регистрация раннера:
 ```bash
-   docker run --rm -ti --name gitlab-runner --restart always \
+   docker run -ti --rm --name gitlab-runner \
      --network host \
      -v /srv/gitlab-runner/config:/etc/gitlab-runner \
      -v /var/run/docker.sock:/var/run/docker.sock \
      gitlab/gitlab-runner:latest register
+```
+
+Конфигурация раннера для docker-in-docker:
+```yaml
+    volumes = ["/cache", "/var/run/docker.sock:/var/run/docker.sock"]
+    extra_hosts = ["gitlab.localdomain:192.168.56.10"]
 ```
 
 Запуск:
@@ -30,12 +65,6 @@ cat /etc/gitlab/initial_root_password
      -v /srv/gitlab-runner/config:/etc/gitlab-runner \
      -v /var/run/docker.sock:/var/run/docker.sock \
      gitlab/gitlab-runner:latest
-```
-
-Конфигурация:
-```yaml
-    volumes = ["/cache", "/var/run/docker.sock:/var/run/docker.sock"]
-    extra_hosts = ["gitlab.localdomain:192.168.56.10"]
 ```
 
 ## Pipeline
