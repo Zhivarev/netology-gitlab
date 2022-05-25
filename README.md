@@ -87,6 +87,16 @@ build:
    - docker build .
 ```
 
+## Sonarqube
+
+```bash
+vagrant ssh
+cd /vagrant
+docker-compose up -d
+```
+
+Sonarqube будет доступен по адресу http://gitlab.localdomain:9000
+
 ## Pipeline with sonarqube-check
 
 ```yaml

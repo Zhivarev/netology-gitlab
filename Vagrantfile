@@ -87,7 +87,7 @@ Vagrant.configure("2") do |config|
     sysctl vm.max_map_count=262144
 
     # run sonarqube
-    cd /vagrant && docker-compose up -d
+    # cd /vagrant && docker-compose up -d
 
     # add some records to /etc/hosts
     echo -e "192.168.56.10\tubuntu-bionic\tubuntu-bionic" >> /etc/hosts
