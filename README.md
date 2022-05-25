@@ -2,12 +2,6 @@
 
 ## Развернуть инсталляцию
 
-0. Установить плагин vagrant-disksize
-
-```bash
-
-```
-
 1. Добавить запись в локальный /etc/hosts:
 
 ```bash
@@ -17,8 +11,9 @@ echo '192.168.56.10    gitlab.localdomain gitlab' >> /etc/hosts
 2. Запустить инсталляцию:
 
 ```bash
-vagrant up
+VAGRANT_EXPERIMENTAL="disks" vagrant up
 ```
+Переменная окружения VAGRANT_EXPERIMENTAL нужна для того, чтобы vagrant настроил виртуалку с нестандартным размером диска.
 
 После успешного завершения Gitlab будет доступен по адресу http://gitlab.localdomain
 
