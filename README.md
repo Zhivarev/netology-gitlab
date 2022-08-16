@@ -97,6 +97,7 @@ Sonarqube будет доступен по адресу http://gitlab.localdomai
 ```yaml
 stages:
   - test
+  - static-analysis
   - build
 
 test:
@@ -105,7 +106,7 @@ test:
   script: 
    - go test .
 
-sonarqube-check:
+static-analysis:
  stage: test
  image:
   name: sonarsource/sonar-scanner-cli
