@@ -32,7 +32,7 @@ Vagrant.configure("2") do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  config.vm.network "private_network", ip: "192.168.56.10"
+  config.vm.network "private_network", ip: "192.168.20.117"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -74,8 +74,8 @@ Vagrant.configure("2") do |config|
 
     # install gitlab: https://about.gitlab.com/install/#ubuntu
     apt-get install -y curl openssh-server ca-certificates tzdata perl
-    curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash
-    sudo EXTERNAL_URL="http://gitlab.localdomain" apt-get install gitlab-ee
+    curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | bash
+    sudo EXTERNAL_URL="http://gitlab.localdomain" apt-get install gitlab-ce
 
     # pull some images in advance
     docker pull gitlab/gitlab-runner:latest
@@ -90,7 +90,7 @@ Vagrant.configure("2") do |config|
     # cd /vagrant && docker-compose up -d
 
     # add some records to /etc/hosts
-    echo -e "192.168.56.10\tubuntu-bionic\tubuntu-bionic" >> /etc/hosts
-    echo -e "192.168.56.10\tgitlab.localdomain\tgitlab" >> /etc/hosts
+    echo -e "192.168.20.117\tvm7\tvm7" >> /etc/hosts
+    echo -e "192.168.20.117\tgitlab.localdomain\tgitlab" >> /etc/hosts
   SHELL
 end
